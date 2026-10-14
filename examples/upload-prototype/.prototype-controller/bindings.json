@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "bindings": [
+    {
+      "targetId": "upload.file-list",
+      "stateId": "partial-error",
+      "mode": "use-existing",
+      "origin": "existing-component",
+      "owner": "designer",
+      "status": "ready",
+      "visualLocked": true,
+      "componentKey": "UploadPartialError"
+    },
+    {
+      "targetId": "upload.file-list",
+      "stateId": "loading",
+      "mode": "generate",
+      "origin": "generated",
+      "owner": "controller",
+      "status": "ready",
+      "visualLocked": false,
+      "componentKey": "GeneratedFileListLoading"
+    },
+    {
+      "targetId": "upload.file-list",
+      "stateId": "file-too-large",
+      "mode": "generate",
+      "origin": "design-reference",
+      "owner": "designer",
+      "status": "needs-review",
+      "visualLocked": true,
+      "componentKey": "ReferenceFileTooLarge",
+      "reference": {
+        "kind": "text",
+        "path": ".prototype-controller/references/file-too-large.md",
+        "accepted": false
+      }
+    },
+    {
+      "targetId": "upload.panel",
+      "stateId": "permission-denied",
+      "mode": "provide-later",
+      "origin": "pending",
+      "owner": "designer",
+      "status": "unmapped",
+      "visualLocked": true,
+      "reason": "Designer will provide the denied-access design later."
+    }
+  ]
+}

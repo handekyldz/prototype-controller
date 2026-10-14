@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 import { FileList } from "./FileList.tsx";
 import { useUpload } from "./useUpload.ts";
+import { FileListStateSlot } from "../prototype/FileListStateSlot.tsx";
 
 export function UploadPanel() {
   const { items, isUploading, addFiles } = useUpload();
@@ -20,6 +21,7 @@ export function UploadPanel() {
       </label>
       {isUploading && <p className="upload-progress">Uploading files…</p>}
       <FileList items={items} />
+      <FileListStateSlot />
     </section>
   );
 }

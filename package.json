@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p packages/schema && tsc -p examples/upload-prototype",
+    "typecheck": "tsc -p packages/schema && tsc -p packages/runtime && tsc -p packages/react && tsc -p examples/upload-prototype",
     "build:example": "npm run build -w upload-prototype"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { uploadFile } from "./uploadFile.ts";
+import { useControlledUpload } from "../prototype/useControlledUpload.ts";
 
 export type UploadStatus = "uploading" | "done";
 
@@ -11,6 +12,7 @@ export type UploadItem = {
 };
 
 export function useUpload() {
+  const controlled = useControlledUpload();
   const [items, setItems] = useState<UploadItem[]>([]);
   const isUploading = items.some((item) => item.status === "uploading");
 
@@ -31,5 +33,5 @@ export function useUpload() {
     });
   }
 
-  return { items, isUploading, addFiles };
+  return controlled ?? { items, isUploading, addFiles };
 }

@@ -9,7 +9,7 @@
       "confidence": "high",
       "evidence": [
         { "file": "src/App.tsx", "line": 7, "symbol": "<UploadPanel />" },
-        { "file": "src/upload/UploadPanel.tsx", "line": 19, "symbol": "<input type=\"file\" multiple" }
+        { "file": "src/upload/UploadPanel.tsx", "line": 20, "symbol": "<input type=\"file\" multiple" }
       ],
       "targets": [
         {
@@ -18,7 +18,7 @@
           "status": "observed",
           "confidence": "high",
           "evidence": [
-            { "file": "src/upload/UploadPanel.tsx", "line": 15, "symbol": "className=\"upload-panel\"" }
+            { "file": "src/upload/UploadPanel.tsx", "line": 16, "symbol": "className=\"upload-panel\"" }
           ]
         },
         {
@@ -46,7 +46,7 @@
           "summary": "At least one file is uploading: panel shows a progress message.",
           "status": "observed",
           "confidence": "high",
-          "evidence": [{ "file": "src/upload/UploadPanel.tsx", "line": 21, "symbol": "isUploading &&" }]
+          "evidence": [{ "file": "src/upload/UploadPanel.tsx", "line": 22, "symbol": "isUploading &&" }]
         },
         {
           "id": "file-uploading",
@@ -62,7 +62,7 @@
           "summary": "Row shows 'Uploaded' once its upload resolves.",
           "status": "observed",
           "confidence": "high",
-          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 28, "symbol": ".then(" }]
+          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 30, "symbol": ".then(" }]
         }
       ],
       "edgeCases": [
@@ -74,7 +74,7 @@
           "status": "inferred",
           "confidence": "high",
           "rationale": "Files upload independently in parallel, so one request can fail without the others; no rejection path exists.",
-          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 27, "symbol": "added.forEach" }]
+          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 29, "symbol": "added.forEach" }]
         },
         {
           "id": "slow-upload",

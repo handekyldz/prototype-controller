@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "upload.partial-failure",
+  "title": "One of three files fails",
+  "scope": "flow",
+  "flowIds": ["upload-documents"],
+  "targets": ["upload.panel", "upload.file-list"],
+  "initial": "idle",
+  "phases": {
+    "idle": { "upload.file-list": "empty" },
+    "uploading": { "upload.panel": "uploading", "upload.file-list": "file-uploading" },
+    "partial-error": { "upload.file-list": "partial-error" },
+    "retrying": { "upload.panel": "uploading", "upload.file-list": "file-uploading" },
+    "success": { "upload.file-list": "file-done" }
+  },
+  "steps": [
+    {
+      "on": "SELECT_FILES",
+      "from": "idle",
+      "to": "uploading",
+      "effects": [{ "kind": "mock-upload", "outcomes": ["success", "success", "error"], "settle": { "mode": "auto", "delayMs": 1200 } }]
+    },
+    { "on": "UPLOAD_SETTLED", "from": "uploading", "to": "partial-error", "guard": "some-failed" },
+    { "on": "UPLOAD_SETTLED", "from": "uploading", "to": "success", "guard": "none-failed" },
+    {
+      "on": "RETRY_FAILED_FILE",
+      "from": "partial-error",
+      "to": "retrying",
+      "effects": [{ "kind": "mock-retry", "outcomes": ["success"], "settle": { "mode": "auto", "delayMs": 1200 } }]
+    },
+    { "on": "RETRY_SETTLED", "from": "retrying", "to": "partial-error", "guard": "some-failed" },
+    { "on": "RETRY_SETTLED", "from": "retrying", "to": "success", "guard": "none-failed" }
+  ]
+}

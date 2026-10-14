@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { collectEvidence, DiscoveryResult } from "@prototype-controller/schema";
-import expected from "./discovery.expected.json";
+import expected from "../.prototype-controller/discovery.json";
 
 // Checks the golden discovery result for this fixture: shape, classification and
 // that every evidence pointer matches real source. It does not exercise the skill itself.
