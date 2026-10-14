@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "upload.slow",
+  "title": "Uploads stay in progress until finished",
+  "scope": "flow",
+  "flowIds": ["upload-documents"],
+  "targets": ["upload.panel", "upload.file-list"],
+  "initial": "idle",
+  "phases": {
+    "idle": { "upload.file-list": "empty" },
+    "uploading": { "upload.panel": "uploading", "upload.file-list": "file-uploading" },
+    "success": { "upload.file-list": "file-done" }
+  },
+  "steps": [
+    {
+      "on": "SELECT_FILES",
+      "from": "idle",
+      "to": "uploading",
+      "effects": [{ "kind": "mock-upload", "outcomes": ["success"], "settle": { "mode": "manual" } }]
+    },
+    { "on": "UPLOAD_SETTLED", "from": "uploading", "to": "success", "guard": "none-failed" },
+    {
+      "on": "SELECT_FILES",
+      "from": "success",
+      "to": "uploading",
+      "effects": [{ "kind": "mock-upload", "outcomes": ["success"], "settle": { "mode": "manual" } }]
+    }
+  ]
+}

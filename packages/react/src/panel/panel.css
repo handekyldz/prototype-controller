@@ -1,0 +1,168 @@
+/* Prototype controller panel. All selectors are pc- prefixed to stay out of the prototype's styles. */
+.pc-root {
+  --pc-bg: #ffffff;
+  --pc-fg: #1b1f24;
+  --pc-muted: #5b636e;
+  --pc-border: #d0d5dc;
+  --pc-accent: #3a5bd9;
+  --pc-ready: #1a7f37;
+  --pc-review: #9a6700;
+  --pc-blocked: #b42318;
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 8px;
+  font: 13px/1.4 system-ui, sans-serif;
+  color: var(--pc-fg);
+}
+@media (prefers-color-scheme: dark) {
+  .pc-root {
+    --pc-bg: #1d2128;
+    --pc-fg: #e8eaed;
+    --pc-muted: #a3abb6;
+    --pc-border: #3a404a;
+    --pc-accent: #8aa4ff;
+    --pc-ready: #4ac26b;
+    --pc-review: #d4a72c;
+    --pc-blocked: #ff8182;
+  }
+}
+.pc-root button,
+.pc-root select {
+  font: inherit;
+  color: inherit;
+  background: var(--pc-bg);
+  border: 1px solid var(--pc-border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.pc-root button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pc-root button:focus-visible,
+.pc-root select:focus-visible {
+  outline: 2px solid var(--pc-accent);
+  outline-offset: 2px;
+}
+.pc-root button[aria-pressed="true"] {
+  border-color: var(--pc-accent);
+  color: var(--pc-accent);
+  font-weight: 600;
+}
+.pc-toggle {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+}
+.pc-panel {
+  width: min(340px, calc(100vw - 32px));
+  max-height: 70vh;
+  overflow: auto;
+  padding: 12px;
+  background: var(--pc-bg);
+  border: 1px solid var(--pc-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+}
+.pc-modes,
+.pc-actions,
+.pc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.pc-filters label,
+.pc-present > label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--pc-muted);
+}
+.pc-heading {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pc-muted);
+}
+.pc-list,
+.pc-steps {
+  margin: 0 0 10px;
+  padding: 0;
+}
+.pc-list {
+  list-style: none;
+}
+.pc-steps {
+  padding-left: 20px;
+}
+.pc-steps li {
+  margin: 2px 0;
+}
+.pc-steps li[aria-current="step"] {
+  font-weight: 600;
+}
+.pc-step--done {
+  color: var(--pc-muted);
+}
+.pc-item {
+  padding: 8px 0;
+  border-top: 1px solid var(--pc-border);
+}
+.pc-item-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.pc-item-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pc-chip,
+.pc-badge {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--pc-border);
+}
+.pc-badge--ready,
+.pc-badge--active {
+  color: var(--pc-ready);
+  border-color: currentColor;
+}
+.pc-badge--needs-review {
+  color: var(--pc-review);
+  border-color: currentColor;
+}
+.pc-badge--blocked,
+.pc-badge--unmapped {
+  color: var(--pc-blocked);
+  border-color: currentColor;
+}
+.pc-muted,
+.pc-reason {
+  margin: 0 0 4px;
+  color: var(--pc-muted);
+}
+.pc-reason {
+  color: var(--pc-blocked);
+}
+.pc-error {
+  margin: 0 0 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--pc-blocked);
+  border: 1px solid currentColor;
+}
+.pc-active p,
+.pc-progress {
+  margin: 8px 0;
+}

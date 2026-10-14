@@ -30,8 +30,11 @@ export type Result = { ok: true } | { ok: false; errors: string[] };
 export type Controller = {
   readonly enabled: boolean;
   readonly scenarios: readonly Scenario[];
+  readonly bindings: readonly StateBinding[];
   getState(): RuntimeState;
   subscribe(listener: () => void): () => void;
+  /** Whether a scenario could be activated, without changing state. */
+  check(scenarioId: string): Result;
   activate(scenarioId: string): Result;
   reset(): void;
   dispatch(event: PrototypeEvent): void;
@@ -64,6 +67,20 @@ export function createController(options: ControllerOptions): Controller {
     if (!binding) return `unknown state '${key}'`;
     if (binding.status === "unmapped") return `state '${key}' is unmapped: ${binding.reason}`;
     return null;
+  }
+
+  function scenarioProblems(scenarioId: string): string[] {
+    const scenario = options.scenarios.find((s) => s.id === scenarioId);
+    if (!scenario) return [`unknown scenario '${scenarioId}'`];
+    const errors: string[] = [];
+    if (scenario.scope === "cross-flow") errors.push("cross-flow scenarios are not supported in v0.1");
+    for (const map of Object.values(scenario.phases)) {
+      for (const [targetId, stateId] of Object.entries(map)) {
+        const problem = stateProblem(targetId, stateId);
+        if (problem && !errors.includes(problem)) errors.push(problem);
+      }
+    }
+    return errors;
   }
 
   function cancelTimers() {
@@ -99,25 +116,22 @@ export function createController(options: ControllerOptions): Controller {
   return {
     enabled,
     scenarios: options.scenarios,
+    bindings: options.bindings.bindings,
     getState: () => state,
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
+    check(scenarioId) {
+      if (!enabled) return disabledResult;
+      const errors = scenarioProblems(scenarioId);
+      return errors.length > 0 ? { ok: false, errors } : { ok: true };
+    },
     activate(scenarioId) {
       if (!enabled) return disabledResult;
-      const scenario = options.scenarios.find((s) => s.id === scenarioId);
-      if (!scenario) return fail("ACTIVATE", [`unknown scenario '${scenarioId}'`]);
-      const errors: string[] = [];
-      if (scenario.scope === "cross-flow") errors.push("cross-flow scenarios are not supported in v0.1");
-      for (const map of Object.values(scenario.phases)) {
-        for (const [targetId, stateId] of Object.entries(map)) {
-          const problem = stateProblem(targetId, stateId);
-          if (problem && !errors.includes(problem)) errors.push(problem);
-        }
-      }
+      const errors = scenarioProblems(scenarioId);
       if (errors.length > 0) return fail("ACTIVATE", errors);
-      apply({ type: "ACTIVATE", scenario });
+      apply({ type: "ACTIVATE", scenario: options.scenarios.find((s) => s.id === scenarioId)! });
       return { ok: true };
     },
     reset() {

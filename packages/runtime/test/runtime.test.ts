@@ -125,6 +125,13 @@ describe("activation", () => {
     expect(after.error).toContain("unmapped");
   });
 
+  it("check() reports problems without changing state", () => {
+    const before = controller.getState();
+    expect(controller.check("upload.partial-failure")).toEqual({ ok: true });
+    expect(controller.check("upload.nope")).toEqual({ ok: false, errors: ["unknown scenario 'upload.nope'"] });
+    expect(controller.getState()).toBe(before);
+  });
+
   it("rejects cross-flow scenarios in v0.1", () => {
     setup([scenario(["success"], { scope: "cross-flow" })]);
     expect(controller.activate("upload.partial-failure")).toEqual({

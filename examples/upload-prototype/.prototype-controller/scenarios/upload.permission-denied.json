@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "upload.permission-denied",
+  "title": "User may not upload",
+  "scope": "component",
+  "flowIds": ["upload-documents"],
+  "targets": ["upload.panel"],
+  "initial": "denied",
+  "phases": {
+    "denied": { "upload.panel": "permission-denied" }
+  },
+  "steps": [
+    {
+      "on": "SELECT_FILES",
+      "from": "denied",
+      "to": "denied",
+      "effects": [{ "kind": "mock-upload", "outcomes": ["error"], "settle": { "mode": "manual" } }]
+    }
+  ]
+}

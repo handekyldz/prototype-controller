@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "upload.partial-failure-demo",
+  "title": "Partial upload failure and recovery",
+  "scenarioId": "upload.partial-failure",
+  "intro": "Empty upload panel",
+  "steps": [
+    {
+      "title": "Upload three documents",
+      "action": {
+        "type": "select-files",
+        "files": [
+          { "name": "Q3-report.pdf", "sizeKb": 840 },
+          { "name": "Contract.pdf", "sizeKb": 312 },
+          { "name": "Site-photo.jpg", "sizeKb": 2650 }
+        ]
+      },
+      "expectPhase": "uploading"
+    },
+    {
+      "title": "Two succeed, one fails",
+      "note": "Successful files stay; only the failed file is reported.",
+      "action": { "type": "settle" },
+      "expectPhase": "partial-error"
+    },
+    {
+      "title": "Retry the failed file",
+      "action": { "type": "await-prototype", "event": "RETRY_FAILED_FILE", "hint": "Click “Retry upload” in the prototype" },
+      "expectPhase": "retrying"
+    },
+    {
+      "title": "Retry succeeds",
+      "action": { "type": "settle" },
+      "expectPhase": "success"
+    }
+  ]
+}
