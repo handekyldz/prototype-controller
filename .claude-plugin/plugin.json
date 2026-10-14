@@ -1,0 +1,8 @@
+{
+  "name": "prototype-controller",
+  "version": "0.1.0",
+  "description": "Discover flows, states and edge cases in React prototypes, and make them demoable.",
+  "author": {
+    "name": "handekyldz"
+  }
+}

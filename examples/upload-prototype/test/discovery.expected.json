@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "project": { "name": "upload-prototype", "framework": "react-vite" },
+  "flows": [
+    {
+      "id": "upload-documents",
+      "summary": "User selects several files; all upload in parallel and appear in a list.",
+      "status": "observed",
+      "confidence": "high",
+      "evidence": [
+        { "file": "src/App.tsx", "line": 7, "symbol": "<UploadPanel />" },
+        { "file": "src/upload/UploadPanel.tsx", "line": 19, "symbol": "<input type=\"file\" multiple" }
+      ],
+      "targets": [
+        {
+          "id": "upload.panel",
+          "summary": "Panel with the file picker and the global uploading message.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [
+            { "file": "src/upload/UploadPanel.tsx", "line": 15, "symbol": "className=\"upload-panel\"" }
+          ]
+        },
+        {
+          "id": "upload.file-list",
+          "summary": "List of selected files with per-file status.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [
+            { "file": "src/upload/FileList.tsx", "line": 11, "symbol": "className=\"file-list\"" }
+          ]
+        }
+      ],
+      "states": [
+        {
+          "id": "empty",
+          "targetId": "upload.file-list",
+          "summary": "No files yet: shows an empty message.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [{ "file": "src/upload/FileList.tsx", "line": 6, "symbol": "items.length === 0" }]
+        },
+        {
+          "id": "uploading",
+          "targetId": "upload.panel",
+          "summary": "At least one file is uploading: panel shows a progress message.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [{ "file": "src/upload/UploadPanel.tsx", "line": 21, "symbol": "isUploading &&" }]
+        },
+        {
+          "id": "file-uploading",
+          "targetId": "upload.file-list",
+          "summary": "Row shows 'Uploading…' while its file is in flight.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [{ "file": "src/upload/FileList.tsx", "line": 16, "symbol": "item.status === \"uploading\"" }]
+        },
+        {
+          "id": "file-done",
+          "targetId": "upload.file-list",
+          "summary": "Row shows 'Uploaded' once its upload resolves.",
+          "status": "observed",
+          "confidence": "high",
+          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 28, "symbol": ".then(" }]
+        }
+      ],
+      "edgeCases": [
+        {
+          "id": "partial-failure",
+          "dimension": "recovery",
+          "targetIds": ["upload.file-list", "upload.panel"],
+          "summary": "Some files fail while others succeed.",
+          "status": "inferred",
+          "confidence": "high",
+          "rationale": "Files upload independently in parallel, so one request can fail without the others; no rejection path exists.",
+          "evidence": [{ "file": "src/upload/useUpload.ts", "line": 27, "symbol": "added.forEach" }]
+        },
+        {
+          "id": "slow-upload",
+          "dimension": "network",
+          "targetIds": ["upload.panel", "upload.file-list"],
+          "summary": "Uploads take much longer than the mock delay.",
+          "status": "inferred",
+          "confidence": "medium",
+          "rationale": "The mock resolves in under 1.5s; real uploads of large files can take far longer, and there is no cancel.",
+          "evidence": [{ "file": "src/upload/uploadFile.ts", "line": 7, "symbol": "setTimeout" }]
+        },
+        {
+          "id": "long-file-name",
+          "dimension": "presentation",
+          "targetIds": ["upload.file-list"],
+          "summary": "Very long file names may push size and status out of the row.",
+          "status": "inferred",
+          "confidence": "low",
+          "rationale": "File names are user-controlled and the row has no truncation rule.",
+          "evidence": [{ "file": "src/upload/FileList.tsx", "line": 14, "symbol": "file-name" }]
+        }
+      ],
+      "questions": [
+        {
+          "id": "keep-successful-files",
+          "question": "If 1 of 3 files fails, should the 2 successful files stay in the list?",
+          "recommendedDefault": "Yes, keep them and mark only the failed file.",
+          "consequence": "Determines whether a failure state is per-row or replaces the whole list.",
+          "relatedIds": ["partial-failure"]
+        },
+        {
+          "id": "retry-scope",
+          "question": "Should Retry re-upload only the failed file, or every file?",
+          "recommendedDefault": "Only the failed file, from a per-row Retry button.",
+          "consequence": "Adds a Retry action to the file row and requires a retry event.",
+          "relatedIds": ["partial-failure", "upload.file-list"]
+        }
+      ],
+      "notFound": [
+        {
+          "id": "no-error-handling",
+          "summary": "No rejection handling for uploads; an upload error would leave the row stuck on 'Uploading…'.",
+          "searched": ["src/upload/useUpload.ts", "src/upload/uploadFile.ts"]
+        },
+        {
+          "id": "no-retry",
+          "summary": "No retry or cancel action exists.",
+          "searched": ["src/upload/UploadPanel.tsx", "src/upload/FileList.tsx"]
+        }
+      ]
+    }
+  ]
+}

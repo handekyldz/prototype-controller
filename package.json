@@ -1,0 +1,19 @@
+{
+  "name": "prototype-controller",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/schema && tsc -p examples/upload-prototype",
+    "build:example": "npm run build -w upload-prototype"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}
