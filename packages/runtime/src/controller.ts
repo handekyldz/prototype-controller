@@ -1,4 +1,4 @@
-import type { BindingsDocument, Scenario, StateBinding } from "@prototype-controller/schema";
+import type { BindingsDocument, Scenario, StateBinding } from "./types.ts";
 import {
   baseline,
   reduce,

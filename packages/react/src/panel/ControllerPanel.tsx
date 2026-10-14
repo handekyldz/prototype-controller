@@ -1,6 +1,5 @@
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
-import type { Presentation, ScenarioScope } from "@prototype-controller/schema";
-import type { Controller } from "@prototype-controller/runtime";
+import type { Controller, Presentation, ScenarioScope } from "@prototype-controller/runtime";
 import { replay, runStep } from "./present.ts";
 import "./panel.css";
 

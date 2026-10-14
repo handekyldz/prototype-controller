@@ -14,12 +14,15 @@ These were explicitly chosen by the product designer. Claude must not reopen the
 | D-08 | **Preserve designer-owned visuals** | Behavior can be connected; visual changes require explicit approval. |
 | D-09 | **Explore and lightweight Present modes** | Support design analysis and stakeholder demonstrations. |
 | D-10 | **One active scenario in MVP** | Predictable runtime; scoped manual target override only when nonconflicting. |
+| D-11 | **Product = skills run inside the designer's own project** (2026-10-14) | Designer builds a prototype with Claude Code, runs `discover` → `integrate` there, tries states via the floating panel, `remove` restores baseline. `examples/upload-prototype` is a test fixture only. No drag & drop in the fixture. |
 
 ## Implementation assumptions (revisable with evidence)
 
 - TypeScript for schema/runtime/react; use a small monorepo.
 - A typed registry maps manifest keys to compiled components; no dynamic execution from JSON.
-- Store versioned project decisions under `.prototype-controller/` in the target app.
+- Store versioned project decisions under `.prototype-controller/` in the target app (discovery answers, references). Runtime config lives in `src/prototype-controller/project.ts`, typed so the project's own typecheck validates it.
+- Runtime is copied into the target app as plain TS (`src/prototype-controller/lib/`, React only) by `skills/integrate/scripts/install-runtime.mjs`; no npm package in v0.1.
+- `analyze` is folded into `integrate` (per-state decisions happen there); skills are `discover`, `integrate`, `remove`.
 - Use mocking adapters rather than auto-intercepting all requests.
 
 ## Unresolved questions — do not block M1

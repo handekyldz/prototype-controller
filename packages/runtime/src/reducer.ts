@@ -1,4 +1,4 @@
-import type { MockOutcome, Scenario, ScenarioEffect, ScenarioStep, StepGuard } from "@prototype-controller/schema";
+import type { MockOutcome, Scenario, ScenarioEffect, ScenarioStep, StepGuard } from "./types.ts";
 
 export type SelectedFile = { id: string; name: string; size: number };
 

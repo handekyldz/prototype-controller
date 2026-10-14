@@ -4,9 +4,9 @@ Keep this file short (aim for <80 lines). Update it **at the end** of each miles
 
 ## Current status
 
-- Milestone: **M4 — controller UI done; awaiting approval for M5**
-- Last completed: M4 (2026-10-14).
-- Next: approve M5 plan (`prompts/05_PACKAGING.md`); also full README rewrite (install/usage/how it works) and pre-publish file review.
+- Milestone: **M5 (in progress) — in-project flow working: discover → integrate → remove** (see D-11)
+- Last completed: integrate/remove skills + runtime install script, verified end-to-end in a fresh `npm create vite` react-ts project (2026-10-14).
+- Next: designer tries it in their own project; then README rewrite (install/usage/how it works), release checklist, pre-publish file review.
 - Known blockers: none. Tooling: npm workspaces (pnpm not installed), Node 24, Vitest, Zod 4. `claude` CLI not on PATH; used the VS Code extension's bundled binary.
 
 ## Confirmed product constraints
@@ -22,7 +22,7 @@ See `docs/08_DECISIONS.md` (do not duplicate decision list here).
 | M2 | done | `npm test` 36/36, typecheck, example build pass; `git diff` shows existing fixture UI unchanged | Bindings schema + typed registry; existing/generated/reference/pending states; see `examples/upload-prototype/.prototype-controller/mapping-summary.md` |
 | M3 | done | `npm test` 59/59 (incl. jsdom integration: real Retry CTA retries only c; disabled mode identical markup), typecheck, build pass | Scenario schema, pure reducer + controller (generation guard, timers cancelled on reset), minimal React hooks; fixture seams in `useUpload.ts` (+2 lines) and `UploadPanel.tsx` (+1 slot line), no visual change when inactive |
 | M4 | done | `npm test` 67/67 (panel jsdom tests: explore, blocked reason, scope filter, real Retry, conflict alert, Escape/focus, present next/await/previous), typecheck, build; prod bundle grep: no panel/scenario strings; dev server serves all modules | Not yet checked in a real browser; manual steps in `examples/upload-prototype/DEMO.md` |
-| M5 | not started | — | Packaging |
+| M5 | in progress | `npm test` 71/71, typecheck, `claude plugin validate .`; headless e2e in fresh Vite project: discover+integrate → typecheck/build pass, panel absent from prod, only marked seams; remove → `git diff` vs baseline empty | Real-browser check still pending (designer) |
 
 ## Last changes / next small action
 
@@ -31,6 +31,7 @@ See `docs/08_DECISIONS.md` (do not duplicate decision list here).
 - 2026-10-14 | M2 | `packages/schema/src/binding.ts` (+tests), fixture `src/components/ErrorNotice.*` (stand-in designer component), `src/prototype/{adapters,generated,reference,registry}`, `.prototype-controller/{bindings.json,references/,mapping-summary.md}`, `test/mapping.test.tsx` | all pass | text reference is sample input, no screenshot; adapter copy needs designer review; nothing wired into the app until M3 | present M3 plan, stop before coding
 - 2026-10-14 | M3 | `packages/schema/src/scenario.ts`, `packages/runtime/`, `packages/react/src/index.tsx`, fixture `src/prototype/{controller.ts,useControlledUpload.ts,FileListStateSlot.tsx}`, `.prototype-controller/scenarios/upload.partial-failure.json`; discovery result moved to `.prototype-controller/discovery.json` (evidence lines updated after seams) | all pass | provider not mounted in `main.tsx` yet (M4), so scenarios are only exercisable in tests; failed files are hidden from designer FileList and shown in the partial-error notice; bundle gating for production is M4/M5 | present M4 plan, stop before coding
 - 2026-10-14 | M4 | runtime `check()` + `bindings` (panel needs status without activating), `packages/schema/src/presentation.ts`, `packages/react/src/panel/*` (subpath `@prototype-controller/react/panel`), fixture `main.tsx` (dynamic dev-only mount), `.env.development`, `src/prototype/devtools.tsx`, scenarios `upload.slow`, `upload.permission-denied`, presentation, `DEMO.md` | all pass | inactive registry components' CSS still ships in prod (inert); no real-browser run yet | present M5 plan, stop before coding
+- 2026-10-14 | M5 | direction change after designer feedback: product is skills in own project. Added `packages/runtime/src/types.ts` (runtime free of zod, type-sync test), React `Target` + `useSimulatedFiles`, `skills/integrate/{SKILL.md,scripts/install-runtime.mjs,templates/,test/}`, `skills/remove/SKILL.md`, D-11 | all pass; e2e run 1 found template issues (satisfies widening, partial failure needed exactly 3 files, stale evidence lines) → fixed, run 2 clean | only upload flows get simulated scenarios; other flows get state previews only | designer tries in own project
 
 ## Update template
 

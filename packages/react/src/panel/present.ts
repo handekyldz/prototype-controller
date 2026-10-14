@@ -1,5 +1,4 @@
-import type { Presentation, PresentationStep } from "@prototype-controller/schema";
-import type { Controller, Result } from "@prototype-controller/runtime";
+import type { Controller, Presentation, PresentationStep, Result } from "@prototype-controller/runtime";
 
 /** Perform one presentation step through the controller's public API. */
 export function runStep(controller: Controller, step: PresentationStep, stepIndex: number): Result {
